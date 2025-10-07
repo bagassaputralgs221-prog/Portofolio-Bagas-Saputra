@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bagas Saputra — Portfolio (Preview)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom styles for animations */
+    .intro-center { min-height: 100vh; display:flex; align-items:center; justify-content:center; }
+    .hide { display: none !important; }
+    .blur-in {
+      filter: blur(10px);
+      opacity: 0;
+      transform: translateY(20px) scale(.98);
+      transition: filter .9s ease, opacity .9s ease, transform .9s ease;
+    }
+    .blur-in.show {
+      filter: blur(0);
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fade-in.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* simple nav active */
+    .nav-btn.active { color: #a78bfa; border-bottom: 2px solid #a78bfa; }
+    /* smooth content switch */
+    .content-area { min-height: 50vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-black via-indigo-900 to-purple-900 text-white font-sans">
+  <!-- Intro screens -->
+  <div id="intro" class="intro-center">
+    <div id="welcome" class="text-center">
+      <h1 id="welcomeText" class="text-5xl md:text-7xl font-extrabold tracking-wide">WELCOME</h1>
+    </div>
+    <div id="name" class="text-center hide">
+      <h1 id="nameText" class="text-5xl md:text-7xl font-extrabold tracking-wide bg-clip-text text-transparent" style="background-image: linear-gradient(90deg,#a78bfa,#6d28d9);">
+        Bagas Saputra
+      </h1>
+    </div>
+  </div>
+
+  <!-- Main site -->
+  <div id="mainSite" class="hide">
+    <header class="max-w-5xl mx-auto px-6 py-8">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center shadow-lg">
+            <span class="font-bold">BS</span>
+          </div>
+          <div>
+            <h1 class="text-xl font-semibold">Bagas Saputra</h1>
+            <p class="text-xs text-gray-300">Software Developer • Designer</p>
+          </div>
+        </div>
+
+        <nav class="space-x-4">
+          <button class="nav-btn px-3 py-2 rounded-md text-sm nav-button" data-section="home">Home</button>
+          <button class="nav-btn px-3 py-2 rounded-md text-sm nav-button" data-section="about">About</button>
+          <button class="nav-btn px-3 py-2 rounded-md text-sm nav-button" data-section="projects">Projects</button>
+          <button class="nav-btn px-3 py-2 rounded-md text-sm nav-button" data-section="contact">Contact</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 pb-16">
+      <section id="content" class="content-area">
+        <!-- dynamic content injected here -->
+      </section>
+
+      <footer class="mt-16 py-8 border-t border-white/5 text-sm text-gray-400 text-center">
+        © <span id="year"></span> Bagas Saputra • Built with ❤️ — Preview
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // Simple timings: welcome (2s) -> name (1.8s) -> fade to main
+    const welcomeEl = document.getElementById('welcome');
+    const nameEl = document.getElementById('name');
+    const introEl = document.getElementById('intro');
+    const mainSite = document.getElementById('mainSite');
+
+    const showNameDelay = 2000;
+    const nameVisibleFor = 1800;
+    const introFade = 600;
+
+    function showMain() {
+      introEl.classList.add('opacity-0');
+      setTimeout(() => {
+        introEl.classList.add('hide');
+        mainSite.classList.remove('hide');
+        // animate entry of main
+        document.querySelector('#mainSite').classList.add('opacity-0');
+        setTimeout(()=>document.querySelector('#mainSite').classList.remove('opacity-0'), 20);
+        initMain();
+      }, introFade);
+    }
+
+    setTimeout(() => {
+      // hide welcome, show name
+      welcomeEl.classList.add('hide');
+      nameEl.classList.remove('hide');
+      // after nameVisibleFor, go main
+      setTimeout(() => {
+        nameEl.classList.add('opacity-0');
+        setTimeout(showMain, 300);
+      }, nameVisibleFor);
+    }, showNameDelay);
+
+    // --- Main site functionality ---
+    const sections = {
+      home: `
+        <div class="max-w-3xl text-center">
+          <img src="profile.jpg" alt="Bagas Saputra" class="mx-auto w-40 h-40 rounded-full mb-6 border-4 border-purple-500 shadow-lg blur-in" id="profileImg">
+          <h2 class="text-3xl font-bold mb-2 fade-in" id="homeName">Bagas Saputra</h2>
+          <p class="text-lg text-gray-300 mb-4 fade-in" id="homeLead">Creative Web Developer passionate about building interactive and aesthetic websites.</p>
+          <p class="text-gray-400 fade-in">Experienced in React, Tailwind, and modern UI design. Let’s build something amazing together!</p>
+        </div>
+      `,
+      about: `
+        <div class="max-w-3xl text-center blur-in">
+          <h2 class="text-3xl font-bold mb-4">About Me</h2>
+          <p class="text-gray-300 mb-2">I'm a front-end developer who loves turning ideas into responsive, user-friendly web interfaces.</p>
+          <p class="text-gray-400">Skilled in HTML, CSS, JavaScript, React, and Tailwind CSS. I enjoy exploring animations and micro-interactions to make sites feel alive.</p>
+        </div>
+      `,
+      projects: `
+        <div class="max-w-4xl text-center">
+          <h2 class="text-3xl font-bold mb-4">Projects</h2>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-purple-800/30 p-4 rounded-2xl shadow-md hover:shadow-lg transition blur-in">
+              <h3 class="font-semibold mb-2">Personal Portfolio</h3>
+              <p class="text-gray-400 text-sm">A responsive portfolio website with elegant animation and dark theme.</p>
+            </div>
+            <div class="bg-purple-800/30 p-4 rounded-2xl shadow-md hover:shadow-lg transition blur-in">
+              <h3 class="font-semibold mb-2">Landing Page Design</h3>
+              <p class="text-gray-400 text-sm">Modern landing page built with React and Tailwind, featuring smooth scroll and motion effects.</p>
+            </div>
+          </div>
+        </div>
+      `,
+      contact: `
+        <div class="max-w-2xl text-center blur-in">
+          <h2 class="text-3xl font-bold mb-4">Contact</h2>
+          <p class="text-gray-300 mb-4">Interested in collaborating or have a question? Let’s get in touch!</p>
+          <div class="flex justify-center gap-6 text-purple-400">
+            <a href="mailto:bagas@example.com" class="hover:underline">Email</a>
+            <a href="https://github.com/bagassaputra" target="_blank" class="hover:underline">GitHub</a>
+            <a href="https://linkedin.com/in/bagassaputra" target="_blank" class="hover:underline">LinkedIn</a>
+          </div>
+        </div>
+      `
+    };
+
+    function setActiveBtn(name) {
+      document.querySelectorAll('.nav-button').forEach(btn=>{
+        if (btn.dataset.section === name) btn.classList.add('active'); else btn.classList.remove('active');
+      });
+    }
+
+    function animateInContent(container) {
+      // add 'show' class to blur-in / fade-in elements with small delays
+      container.querySelectorAll('.blur-in').forEach((el,i)=>{
+        setTimeout(()=>el.classList.add('show'), 120 + i*120);
+      });
+      container.querySelectorAll('.fade-in').forEach((el,i)=>{
+        setTimeout(()=>el.classList.add('show'), 220 + i*120);
+      });
+    }
+
+    function showSection(name) {
+      const content = document.getElementById('content');
+      content.innerHTML = sections[name] || '<div>Not found</div>';
+      setActiveBtn(name);
+      // animate children
+      setTimeout(()=> animateInContent(content), 50);
+    }
+
+    function initMain() {
+      // set year
+      document.getElementById('year').textContent = new Date().getFullYear();
+      // attach nav handlers
+      document.querySelectorAll('.nav-button').forEach(btn=>{
+        btn.addEventListener('click', ()=> showSection(btn.dataset.section));
+      });
+      // show default home
+      showSection('home');
+    }
+
+    // Accessibility: if profile image doesn't load, fallback text
+    document.addEventListener('DOMContentLoaded', ()=> {
+      // nothing extra
+    });
+  </script>
+</body>
+</html>
