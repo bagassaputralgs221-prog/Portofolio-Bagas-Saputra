@@ -1,1 +1,0 @@
-# Portofolio-Bagas-Saputra
